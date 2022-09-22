@@ -1,0 +1,27 @@
+syntax="proto3";
+
+package db;
+
+option go_package = "github.com/urishabh12/simple_key_value_db/proto";
+
+service DBService {
+    rpc Put(PutRequest) returns (PutResponse) {}
+    rpc Get(GetRequest) returns (GetResponse) {}
+}
+
+message PutRequest {
+    string Key = 1;
+    string Value = 2;
+}
+
+message PutResponse {
+    bool Status = 1;
+}
+
+message GetRequest {
+    string Key = 1;
+}
+
+message GetResponse {
+    string Value = 1;
+}

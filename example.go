@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/urishabh12/db"
+	"github.com/urishabh12/simple_key_value_db/db"
 )
 
 func main() {
