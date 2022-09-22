@@ -6,6 +6,10 @@ import (
 	"os"
 )
 
+const (
+	datastore_folder_name = "datastore"
+)
+
 type DB struct {
 	name     string
 	basePath string
@@ -17,7 +21,7 @@ type KeyValue struct {
 }
 
 func NewDB(name string) *DB {
-	path := fmt.Sprintf("./%s", name)
+	path := fmt.Sprintf("./%s/%s", datastore_folder_name, name)
 	os.MkdirAll(path, 0755)
 	return &DB{
 		name:     name,

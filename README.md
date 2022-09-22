@@ -1,6 +1,7 @@
-# simple key value db
+# Simple Key Value DB
 
-Example
+## Example
+
 ```
 d := db.NewDB("test")
 
