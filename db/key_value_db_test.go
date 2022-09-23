@@ -2,6 +2,7 @@ package db
 
 import (
 	"fmt"
+	"os"
 	"testing"
 )
 
@@ -10,7 +11,11 @@ const (
 )
 
 func Test_ForCaseSensitive(t *testing.T) {
-	d := NewDB(dbName)
+	d, err := NewDB(dbName)
+	if err != nil {
+		t.Error(err)
+	}
+
 	keyUpper := "KEY"
 	keyLower := "key"
 
@@ -31,10 +36,18 @@ func Test_ForCaseSensitive(t *testing.T) {
 		t.Errorf("both the value are same")
 	}
 
+	err = deleteDB(d.basePath)
+	if err != nil {
+		t.Error(err)
+	}
 }
 
 func Test_GetGivesMostRecentPut(t *testing.T) {
-	d := NewDB(dbName)
+	d, err := NewDB(dbName)
+	if err != nil {
+		t.Error(err)
+	}
+
 	key := "recent"
 
 	d.Put(key, "r")
@@ -48,6 +61,11 @@ func Test_GetGivesMostRecentPut(t *testing.T) {
 
 	if v != "random" {
 		t.Errorf("value is not the most recent put")
+	}
+
+	err = deleteDB(d.basePath)
+	if err != nil {
+		t.Error(err)
 	}
 }
 
@@ -64,11 +82,15 @@ func Test_ConvertToKeyValue(t *testing.T) {
 }
 
 func Test_PutEqualGet(t *testing.T) {
-	d := NewDB(dbName)
+	d, err := NewDB(dbName)
+	if err != nil {
+		t.Error(err)
+	}
+
 	key := "abc"
 	value := "xyz"
 
-	err := d.Put(key, value)
+	err = d.Put(key, value)
 	if err != nil {
 		t.Fatalf(err.Error() + " on Put")
 	}
@@ -82,10 +104,19 @@ func Test_PutEqualGet(t *testing.T) {
 		e := fmt.Sprintf("Get value %s not equal to put value %s", v, value)
 		t.Errorf(e)
 	}
+
+	err = deleteDB(d.basePath)
+	if err != nil {
+		t.Error(err)
+	}
 }
 
 func Test_ReadEqualToWrite(t *testing.T) {
-	d := NewDB(dbName)
+	d, err := NewDB(dbName)
+	if err != nil {
+		t.Error(err)
+	}
+
 	writeData := "hello world! how are you doing"
 	file := "path"
 	path := fmt.Sprintf("%s/%s", d.basePath, file)
@@ -100,10 +131,19 @@ func Test_ReadEqualToWrite(t *testing.T) {
 		e := fmt.Sprintf("length not equal of read %s and write %s data", readData, writeData)
 		t.Errorf(e)
 	}
+
+	err = deleteDB(d.basePath)
+	if err != nil {
+		t.Error(err)
+	}
 }
 
 func Test_LengthOfReadEqualToWrite(t *testing.T) {
-	d := NewDB(dbName)
+	d, err := NewDB(dbName)
+	if err != nil {
+		t.Error(err)
+	}
+
 	writeData := "hello world! how are you doing"
 	file := "path"
 	path := fmt.Sprintf("%s/%s", d.basePath, file)
@@ -118,4 +158,19 @@ func Test_LengthOfReadEqualToWrite(t *testing.T) {
 		e := fmt.Sprintf("length not equal of read %d and write %d data", len(readData), len(writeData))
 		t.Errorf(e)
 	}
+
+	err = deleteDB(d.basePath)
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func deleteDB(path string) error {
+	err := os.RemoveAll(path)
+	if err != nil {
+		return err
+	}
+
+	err = os.RemoveAll("./datastore")
+	return err
 }

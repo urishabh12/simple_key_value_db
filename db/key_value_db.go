@@ -20,13 +20,17 @@ type KeyValue struct {
 	Value string `json:"value"`
 }
 
-func NewDB(name string) *DB {
+func NewDB(name string) (*DB, error) {
 	path := fmt.Sprintf("./%s/%s", datastore_folder_name, name)
-	os.MkdirAll(path, 0755)
+	err := os.MkdirAll(path, 0755)
+	if err != nil {
+		return nil, err
+	}
+
 	return &DB{
 		name:     name,
 		basePath: path,
-	}
+	}, nil
 }
 
 func (db *DB) Get(key string) (string, error) {
